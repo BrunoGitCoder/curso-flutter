@@ -16,11 +16,17 @@ class _PerguntaAppState extends State<PerguntaApp> {
 
   @override
   Widget build(BuildContext context) {
-    const perguntas = ['1+1', '2+2'];
-    const respostas = [
-      ['2', '55', '8'],
-      ['8', '6', '4'],
+    final perguntas = [
+      {
+        'texto': 'Qual sua cor favorita?',
+        'respostas': ['Preto', 'Vermelho', 'Amarelo', 'Azul'],
+      },
+      {
+        'texto': 'Qual seu animal favorito?',
+        'respostas': ['Cachorro', 'Gato', 'Macaco', 'Cavalo'],
+      },
     ];
+
     _numeroPergunta = _numeroPergunta > perguntas.length - 1
         ? perguntas.length - 1
         : _numeroPergunta;
@@ -30,19 +36,10 @@ class _PerguntaAppState extends State<PerguntaApp> {
         appBar: AppBar(backgroundColor: Colors.blue, title: Text('Pergntas')),
         body: Column(
           children: [
-            Questao(texto: perguntas[_numeroPergunta]),
-            Resposta(
-              onSelect: _responder,
-              texto: respostas[_numeroPergunta][0],
-            ),
-            Resposta(
-              onSelect: _responder,
-              texto: respostas[_numeroPergunta][1],
-            ),
-            Resposta(
-              onSelect: _responder,
-              texto: respostas[_numeroPergunta][2],
-            ),
+            Questao(texto: perguntas[_numeroPergunta]['texto'].toString()),
+            ...(perguntas[_numeroPergunta]['respostas'] as List<String>).map((resposta) {
+              return Resposta(onSelect: _responder, texto: resposta);
+            })
           ],
         ),
       ),
