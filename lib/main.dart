@@ -6,42 +6,47 @@ main() => runApp(PerguntaApp());
 
 class _PerguntaAppState extends State<PerguntaApp> {
   var _numeroPergunta = 0;
+  static const _perguntas = [
+    {
+      'texto': 'Qual sua cor favorita?',
+      'respostas': ['Preto', 'Vermelho', 'Amarelo', 'Azul', 'Caramelo'],
+    },
+    {
+      'texto': 'Qual seu animal favorito?',
+      'respostas': ['Cachorro', 'Gato', 'Macaco', 'Cavalo'],
+    },
+  ];
 
   void _responder() {
-    print('Pergunta respondida.');
-    setState(() {
-      _numeroPergunta++;
-    });
+    if (temPerguntaSelecionada) {
+      setState(() {
+        _numeroPergunta++;
+      });
+    }
+  }
+
+  bool get temPerguntaSelecionada {
+    return _numeroPergunta < _perguntas.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    final perguntas = [
-      {
-        'texto': 'Qual sua cor favorita?',
-        'respostas': ['Preto', 'Vermelho', 'Amarelo', 'Azul'],
-      },
-      {
-        'texto': 'Qual seu animal favorito?',
-        'respostas': ['Cachorro', 'Gato', 'Macaco', 'Cavalo'],
-      },
-    ];
-
-    _numeroPergunta = _numeroPergunta > perguntas.length - 1
-        ? perguntas.length - 1
-        : _numeroPergunta;
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(backgroundColor: Colors.blue, title: Text('Pergntas')),
-        body: Column(
-          children: [
-            Questao(texto: perguntas[_numeroPergunta]['texto'].toString()),
-            ...(perguntas[_numeroPergunta]['respostas'] as List<String>).map((resposta) {
-              return Resposta(onSelect: _responder, texto: resposta);
-            })
-          ],
-        ),
+        body: temPerguntaSelecionada
+            ? Column(
+                children: [
+                  Questao(
+                    texto: _perguntas[_numeroPergunta]['texto'].toString(),
+                  ),
+                  ...(_perguntas[_numeroPergunta]['respostas'] as List<String>)
+                      .map((resposta) {
+                        return Resposta(onSelect: _responder, texto: resposta);
+                      }),
+                ],
+              )
+            : null,
       ),
     );
   }
